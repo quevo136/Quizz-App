@@ -1,0 +1,74 @@
+﻿@page
+@model Quizz_App.Pages.QuestionsModel
+@{
+    ViewData["Title"] = "Questions";
+}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+</head>
+
+
+<body>
+    <h2>@ViewData["Title"]</h2>
+
+    <div style="postion: fixed; button: 0px; right: 25px;">
+        <a href="/CreateQuestion" class="btn btn-success">Add new question</a>
+    </div>
+
+
+    @if (Model.Questions.Any())
+    {
+        @foreach (var item in Model.Questions)
+        {
+            <table class="table">
+                <tr>
+                    <td>@item.Id: @item.Text</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input id="option1" type="radio" class="rb" name="@item.Id" value="@item.Option1" />@item.Option1
+                        <input id="option2" type="radio" class="rb" name="@item.Id" value="@item.Option2" />@item.Option2
+                        <input id="option3" type="radio" class="rb" name="@item.Id" value="@item.Option3" />@item.Option3
+
+                        <label class="rb" name="@item.Id" style="display:none; font:bold; color:aquamarine ">@item.Correctans</label>
+                    </td>
+                </tr>
+            </table>
+
+        }
+
+        <button id="but1" type="button" value="Submit" class="btn-success" onclick="displayresults();">Submit Quiz</button>
+        <lablel id="lbluseranswer"></lablel>
+
+    }
+    else
+    {
+        <p>No questions available.</p>
+    }
+    <script>
+
+        $(documtent).ready(function () {
+            $("#but1").click(function () {
+                $(".rb").show();
+                $(".rb").attr("disable", true);
+            });
+        })
+        function displayresults() {
+            document.getElementById("lbluseranswer").innerHTML = "";
+            var result = document.getElementsByTagName('input');
+
+            for (i = 0; i < resutl.length; i++) {
+                if (result[i].checked) {
+                    document.getElementById("lbluseranswer").innerHTML += "Q " + result[i].name + ")" + "Your selected answer is: " + result[i].value + "</br>";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
