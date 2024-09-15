@@ -4,71 +4,101 @@
     ViewData["Title"] = "Questions";
 }
 
-
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewData["Title"]</title>
-</head>
-
-
-<body>
-    <h2>@ViewData["Title"]</h2>
-
-    <div style="postion: fixed; button: 0px; right: 25px;">
-        <a href="/CreateQuestion" class="btn btn-success">Add new question</a>
-    </div>
-
-
-    @if (Model.Questions.Any())
-    {
-        @foreach (var item in Model.Questions)
-        {
-            <table class="table">
-                <tr>
-                    <td>@item.Id: @item.Text</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <input id="option1" type="radio" class="rb" name="@item.Id" value="@item.Option1" />@item.Option1
-                        <input id="option2" type="radio" class="rb" name="@item.Id" value="@item.Option2" />@item.Option2
-                        <input id="option3" type="radio" class="rb" name="@item.Id" value="@item.Option3" />@item.Option3
-
-                        <label class="rb" name="@item.Id" style="display:none; font:bold; color:aquamarine ">@item.Correctans</label>
-                    </td>
-                </tr>
-            </table>
-
+    <style>
+        .correct-answer {
+            display: none;
         }
 
-        <button id="but1" type="button" value="Submit" class="btn-success" onclick="displayresults();">Submit Quiz</button>
-        <lablel id="lbluseranswer"></lablel>
+        .button-group {
+            margin-top: 10px;
+        }
+        .question-item {
+            margin-bottom: 20px;
+        }
 
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-question-button {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class=".title-container">
+        <h2>@ViewData["Title"]</h2>
+        <a href="/CreateQuestion" class="btn btn-success add-question-button">Add new question</a>
+        
+    </div>
+    @if (Model.Questions.Any())
+    {
+        <form id="quizForm">
+        @foreach (var item in Model.Questions)
+        {
+            <div class="question-item">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <h3>@item.Text</h3>
+                            <input type="hidden" class="correct-answer" value="@item.Correctans" />
+                            <div>
+                                <input type="radio" name="question_@item.Id" value="@item.Option1" />@item.Option1<br />
+                                <input type="radio" name="question_@item.Id" value="@item.Option2" />@item.Option2<br />
+                                <input type="radio" name="question_@item.Id" value="@item.Option3" />@item.Option3<br />
+                            </div>
+                        </td>
+                        <td class="button-group">
+                            <a href="/EditQuestion?id=@item.Id" class="btn btn-warning">Edit</a>
+                            <a href="/DeleteQuestion?id=@item.Id" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+            <button id="but1" type="button" class="btn btn-success" onclick="calculateScore();">Submit Quiz</button>
+            <div id="scoreDisplay"></div>
+        </form>
     }
     else
     {
         <p>No questions available.</p>
     }
-    <script>
 
-        $(documtent).ready(function () {
+    <script>
+        // Make sure jQuery is included if you use jQuery
+        $(document).ready(function () {
             $("#but1").click(function () {
                 $(".rb").show();
-                $(".rb").attr("disable", true);
+                $(".rb").prop("disabled", true); // Use prop() for disabling
             });
-        })
-        function displayresults() {
-            document.getElementById("lbluseranswer").innerHTML = "";
-            var result = document.getElementsByTagName('input');
+        });
 
-            for (i = 0; i < resutl.length; i++) {
-                if (result[i].checked) {
-                    document.getElementById("lbluseranswer").innerHTML += "Q " + result[i].name + ")" + "Your selected answer is: " + result[i].value + "</br>";
+        function calculateScore() {
+            var totalQuestions = document.querySelectorAll('.question-item').length;
+            var score = 0;
+
+            document.querySelectorAll('.question-item').forEach(function (questionItem) {
+                var correctAnswer = questionItem.querySelector('.correct-answer').value;
+                var selectedAnswer = questionItem.querySelector('input[name^="question_"]:checked');
+
+                if (selectedAnswer && selectedAnswer.value === correctAnswer) {
+                    score++;
                 }
-            }
+            });
+
+            var percentage = (score / totalQuestions) * 100;
+            document.getElementById('scoreDisplay').innerHTML =
+                '<h3>Your Score: ' + score + '/' + totalQuestions + ' (' + percentage.toFixed(2) + '%)</h3>';
         }
     </script>
-
 </body>
 </html>

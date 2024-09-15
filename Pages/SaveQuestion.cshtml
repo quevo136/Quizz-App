@@ -1,0 +1,23 @@
+﻿@page
+@model Quizz_App.Pages.SaveQuestionModel
+@{
+    ViewData["Title"] = "Save Question";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <h2>@ViewData["Title"]</h2>
+
+    <form method="post">
+        <input type="hidden" asp-for="Question.Id" />
+        <p>Are you sure you want to save the question: <strong>@Model.Question.Text</strong>?</p>
+        <button type="submit" class="btn btn-danger" href="SaveQuestion">Delete</button>
+        <a href="/Questions" class="btn btn-secondary">Cancel</a>
+    </form>
+</body>
+</html>

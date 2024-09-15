@@ -1,24 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Quizz_App.Context;
 using Quizz_App.Models;
+using Quizz_App.Services;
 
 namespace Quizz_App.Pages
 {
     public class CreateQuestionModel : PageModel
     {
         private readonly AppDbContext _service;
-
+        private readonly IQuestionService _questionService;
         [BindProperty]
         public Question Question { get; set; }
 
-        public CreateQuestionModel(AppDbContext service)
+        //public CreateQuestionModel(AppDbContext service)
+        //{
+        //    _service = service ?? throw new ArgumentNullException(nameof(service));
+        //}
+        public CreateQuestionModel(AppDbContext service, IQuestionService questionService)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _service = service;
+            _questionService = questionService;
         }
-
-        public void OnGet()
-        {}
+        public void OnGet() {}
 
         public IActionResult OnPost()
         {
@@ -30,24 +35,18 @@ namespace Quizz_App.Pages
                 return Page();
             }
 
-            if (Question == null)
+            if (_questionService.QuestionExists(Question.Text))
             {
-                Console.WriteLine("Question is null.");
-
-                return Page(); // Return the page if `Question` is null to avoid null reference exception
-            }
-            if (_service == null)
-            {
-                // Log this information
-                Console.WriteLine("Service is null.");
+                ModelState.AddModelError(string.Empty, "A question with the same text already exists.");
                 return Page();
             }
+
 
             _service.Add(Question);
 
             _service.SaveChanges();
             
-            return Redirect("/Index"); // Adjust to your needs
+            return Redirect("/Questions"); // Adjust to your needs
         }
     }
 }

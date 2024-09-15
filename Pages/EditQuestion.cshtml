@@ -1,0 +1,65 @@
+﻿@page
+@model Quizz_App.Pages.QuestionsModel
+@{
+    ViewData["Title"] = "Questions";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <h2>@ViewData["Title"]</h2>
+
+    <div style="position: fixed; bottom: 0px; right: 25px;">
+        <a href="/CreateQuestion" class="btn btn-success">Add new question</a>
+    </div>
+
+    @if (Model.Questions.Any())
+    {
+        @foreach (var item in Model.Questions)
+        {
+            <div class="question-item">
+                <h3>@item.Text</h3>
+                <form method="post" action="EditQuestion">
+                    <input type="hidden" name="Question.Id" value="@item.Id" />
+                    <div>
+                        <label>Question Text:</label>
+                        <input type="text" name="Question.Text" value="@item.Text" required />
+                    </div>
+
+                    <div>
+                        <label>Correct Option:</label>
+                        <input type="text" name="Question.Correctans" value="@item.Correctans" required />
+                    </div>
+                    <div>
+                        <label>Option 1:</label>
+                        <input type="text" name="Question.Option1" value="@item.Option1" required />
+                    </div>
+                    <div>
+                        <label>Option 2:</label>
+                        <input type="text" name="Question.Option2" value="@item.Option2" required />
+                    </div>
+                    <div>
+                        <label>Option 3:</label>
+                        <input type="text" name="Question.Option3" value="@item.Option3" required />
+                    </div>
+
+                    <button href="/SaveQuestion?id=@item.Id"  type="submit" class="btn btn-success">Save Changes</button>
+                </form>
+                
+            </div>
+        }
+    }
+    else
+    {
+        <p>No questions available.</p>
+    }
+
+    <script>
+        // JavaScript for handling client-side interactions if needed
+    </script>
+</body>
+</html>
