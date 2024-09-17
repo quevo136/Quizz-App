@@ -1,7 +1,7 @@
 ﻿@page
 @model Quizz_App.Pages.QuestionsModel
 @{
-    ViewData["Title"] = "Questions";
+    ViewData["Title"] = "Edit Questions";
 }
 
 <!DOCTYPE html>
@@ -23,7 +23,7 @@
         {
             <div class="question-item">
                 <h3>@item.Text</h3>
-                <form method="post" action="EditQuestion">
+                <form method="post" >
                     <input type="hidden" name="Question.Id" value="@item.Id" />
                     <div>
                         <label>Question Text:</label>

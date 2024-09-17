@@ -27,7 +27,7 @@ namespace Quizz_App.Pages
             return Page();
         }
 
-        public IActionResult OnPostEdit(Question question)
+        public async Task<IActionResult> OnPostEdit(Question question)
         {
 
             var value = $"{question.Text}";
@@ -47,11 +47,11 @@ namespace Quizz_App.Pages
             existingQuestion.Option1 = question.Option1;
             existingQuestion.Option2 = question.Option2;
             existingQuestion.Option3 = question.Option3;
-            
-            _context.SaveChanges();
 
+            await _context.SaveChangesAsync();
             return RedirectToPage("/Index");
         }
+
 
         //public IActionResult OnPostDelete(int id)
         //{
